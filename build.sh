@@ -319,11 +319,11 @@ fi
 if [ "$PACKAGES" = "YES" ];
 then
     UpdateVersionNumber
-    PackageWindows "netcoreapp3.1"
+    #PackageWindows "netcoreapp3.1"
     PackageLinux "net462" "linux-x64"
-    PackageLinux "netcoreapp3.1" "linux-x64"
-    PackageLinux "netcoreapp3.1" "linux-arm64"
-    PackageLinux "netcoreapp3.1" "linux-arm"
-    PackageMacOS "netcoreapp3.1"
-    PackageMacOSApp "netcoreapp3.1"
+    #PackageLinux "netcoreapp3.1" "linux-x64"
+    #PackageLinux "netcoreapp3.1" "linux-arm64"
+    #PackageLinux "netcoreapp3.1" "linux-arm"
+    #PackageMacOS "netcoreapp3.1"
+    #PackageMacOSApp "netcoreapp3.1"
 fi

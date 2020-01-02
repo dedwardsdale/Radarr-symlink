@@ -86,7 +86,8 @@ namespace NzbDrone.Core.MediaFiles
             var newFileName = _buildFileNames.BuildFileName(localMovie.Movie, movieFile);
             var filePath = _buildFileNames.BuildFilePath(localMovie.Movie, newFileName, Path.GetExtension(localMovie.Path));
 
-            EnsureMovieFolder(movieFile, localMovie, filePath);
+            //EnsureMovieFolder(movieFile, localMovie, filePath); // Comment this out to stop the folder per movie being created
+            filePath = "/mnt/user/downloads/movies" + newFileName + "/" + Path.GetExtension(localMovie.Path); // Hard code our filepath
 
             if (_configService.CopyUsingHardlinks)
             {

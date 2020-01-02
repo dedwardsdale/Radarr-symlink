@@ -55,6 +55,8 @@ namespace NzbDrone.Common.Disk
             Ensure.That(sourcePath, () => sourcePath).IsValidPath();
             Ensure.That(targetPath, () => targetPath).IsValidPath();
 
+            _logger.Debug(string.Format("TransferFolder called with {0} \n {1} \n {2} \n {3}", sourcePath, targetPath, mode.ToString(), verificationMode.ToString()));
+
             if (mode == TransferMode.Move && !_diskProvider.FolderExists(targetPath))
             {
                 if (verificationMode == DiskTransferVerificationMode.TryTransactional || verificationMode == DiskTransferVerificationMode.VerifyOnly)
@@ -292,6 +294,7 @@ namespace NzbDrone.Common.Disk
 
             if (mode.HasFlag(TransferMode.HardLink))
             {
+                /* Dirty hack to make symlinking work
                 var createdHardlink = _diskProvider.TryCreateHardLink(sourcePath, targetPath);
                 if (createdHardlink)
                 {
@@ -301,7 +304,17 @@ namespace NzbDrone.Common.Disk
                 if (!mode.HasFlag(TransferMode.Copy))
                 {
                     throw new IOException("Hardlinking from '" + sourcePath + "' to '" + targetPath + "' failed.");
-                }
+                }*/
+
+                _logger.Info(string.Format("Attempting to symlink {0} to {1}", sourcePath, targetPath));
+
+                // Wrap paths in single quotes and escape any single quotes within the path, to deal with any special characters
+                string ln_sourcePath = "'" + sourcePath.Replace("\'", "'\"'\"'") + "'";
+                string ln_targetPath = "'" + targetPath.Replace("\'", "'\"'\"'") + "'";
+
+                System.Diagnostics.Process.Start("/bin/ln", string.Format("-s {0} {1}", ln_sourcePath, ln_targetPath));
+
+                return TransferMode.HardLink;
             }
 
             // Adjust the transfer mode depending on the filesystems
